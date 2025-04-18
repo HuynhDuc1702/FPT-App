@@ -56,6 +56,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MainPage(); // just go straight to login now
+    return LoginView(); // just go straight to login now
   }
 }
