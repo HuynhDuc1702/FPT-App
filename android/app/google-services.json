@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1004725949164",
+    "project_id": "fptapp",
+    "storage_bucket": "fptapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1004725949164:android:09175f76afc95e5c8b0bc9",
+        "android_client_info": {
+          "package_name": "edu.FPT.fptapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrDdq1yE41P-Ahnx78Sol8dE2k-MPKXW0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
