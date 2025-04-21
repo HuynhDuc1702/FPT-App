@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -6,15 +5,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fptapp/blocs/auth_bloc/auth-state.dart';
 import 'package:fptapp/blocs/auth_bloc/auth_bloc.dart';
 import 'package:fptapp/blocs/auth_bloc/auth_event.dart';
-import 'package:fptapp/services/firestore.dart';
+import 'package:fptapp/blocs/notes/notes_bloc.dart';
+import 'package:fptapp/blocs/notes/notes_event.dart';
+import 'package:fptapp/blocs/notes/notes_state.dart';
 
-class MainPage extends StatelessWidget {
-  final FirestoreService firestoreService = FirestoreService();
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
   final TextEditingController textController = TextEditingController();
-  MainPage({super.key});
-
-  final String imageUrl =
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/960px-Cat_August_2010-4.jpg';
+  @override
+  void initState() {
+    super.initState();
+    // Load notes when the widget is created
+    context.read<NotesBloc>().add(LoadNotes());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +38,14 @@ class MainPage extends StatelessWidget {
                   onPressed: () {
                     if (docID == null) {
                       //Add new note
-                      firestoreService.addNote(textController.text);
+                      context.read<NotesBloc>().add(
+                        AddNote(textController.text),
+                      );
                     } else {
                       //Updatenew note
-                      firestoreService.updateNote(docID, textController.text);
+                      context.read<NotesBloc>().add(
+                        UpdateNote(docID, textController.text),
+                      );
                     }
 
                     //Clear the text controller
@@ -49,7 +62,7 @@ class MainPage extends StatelessWidget {
     }
 
     void deleteNote(String docID) {
-      firestoreService.deleteNote(docID);
+      context.read<NotesBloc>().add(DeleteNote(docID));
     }
 
     return BlocListener<AuthBlocLogout, Authstate>(
@@ -81,24 +94,27 @@ class MainPage extends StatelessWidget {
           onPressed: () => openNoteBox(null),
           child: const Icon(Icons.add),
         ),
-        body: StreamBuilder<QuerySnapshot>(
-          stream: firestoreService.getNotesStream(),
-          builder: (context, snapshot) {
+        body: BlocBuilder<NotesBloc, NotesState>(
+          builder: (context, state) {
+            if (state is NotesLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
             //Print all data if have note
-            if (snapshot.hasData) {
-              List notesList = snapshot.data!.docs;
+            else if (state is NotesLoaded) {
+              final notesList = state.notes;
+              if (notesList.isEmpty) {
+                return const Center(child: Text("No notes..."));
+              }
 
               //display as a list
               return ListView.builder(
                 itemCount: notesList.length,
                 itemBuilder: (context, index) {
-                  //get each noteb
-                  DocumentSnapshot document = notesList[index];
-                  String docID = document.id;
+                  //get each note
+                  final note = notesList[index];
+                  final String noteText = note['note'];
+                  final String docID = note['id'];
 
-                  Map<String, dynamic> data =
-                      document.data() as Map<String, dynamic>;
-                  String noteText = data['notes'];
                   return ListTile(
                     title: Text(noteText),
                     trailing: Row(
@@ -113,13 +129,14 @@ class MainPage extends StatelessWidget {
                           icon: const Icon(Icons.delete),
                         ),
                       ],
-                      
                     ),
                   );
                 },
               );
             } else {
-              return const Text("No notes...");
+              return const Center(
+                child: Text("Something went wrong or unknown state"),
+              );
             }
           },
         ),

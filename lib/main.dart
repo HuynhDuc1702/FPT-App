@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fptapp/blocs/auth_bloc/auth_bloc.dart';
+import 'package:fptapp/blocs/notes/notes_bloc.dart';
 import 'package:fptapp/views/login_view.dart';
 import 'package:fptapp/views/main_page.dart';
 import 'package:fptapp/views/register_view.dart';
@@ -18,6 +19,7 @@ void main() async {
       BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
       BlocProvider<AuthBlocRegister>(create: (context) => AuthBlocRegister()),
       BlocProvider<AuthBlocLogout>(create: (context) => AuthBlocLogout()),
+      BlocProvider<NotesBloc>(create: (context) => NotesBloc()),
       ],
       
       child: const FPTMaterials(),
@@ -56,6 +58,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LoginView(); // just go straight to login now
+    return MainPage(); // just go straight to login now
   }
 }
