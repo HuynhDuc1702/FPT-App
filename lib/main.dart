@@ -8,6 +8,7 @@ import 'package:fptapp/views/main_page.dart';
 import 'package:fptapp/views/register_view.dart';
 import 'package:fptapp/views/verify_email.dart';
 import 'firebase_options.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,12 +17,12 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
-      BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
-      BlocProvider<AuthBlocRegister>(create: (context) => AuthBlocRegister()),
-      BlocProvider<AuthBlocLogout>(create: (context) => AuthBlocLogout()),
-      BlocProvider<NotesBloc>(create: (context) => NotesBloc()),
+        BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
+        BlocProvider<AuthBlocRegister>(create: (context) => AuthBlocRegister()),
+        BlocProvider<AuthBlocLogout>(create: (context) => AuthBlocLogout()),
+        BlocProvider<NotesBloc>(create: (context) => NotesBloc()),
       ],
-      
+
       child: const FPTMaterials(),
     ),
   );
@@ -35,9 +36,9 @@ class FPTMaterials extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.deepPurple, // Set your preferred color
+          backgroundColor: Colors.blue, // Set your preferred color
           foregroundColor: Colors.white, // For title/text/icon color
         ),
       ),
@@ -46,18 +47,70 @@ class FPTMaterials extends StatelessWidget {
       routes: {
         '/login/': (context) => const LoginView(),
         '/register/': (context) => const RegisterView(),
-        '/main-page/': (context) => MainPage(),
+        '/note-page/': (context) => MainPage(),
         '/verify-email/': (context) => const VerifyEmailView(),
+        '/home/': (context) => const HomePage(),
       },
     );
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int myIndex = 0;
+
+  final List<Widget> pages = [
+   
+    Center(child: Text('News Page')),
+    Center(child: Text('Music Page')),
+     const MainPage(),
+  ];
+
+  @override
   Widget build(BuildContext context) {
-    return MainPage(); // just go straight to login now
+    return Scaffold(
+      body: pages[myIndex],
+      bottomNavigationBar: Container(
+        color: Colors.blue,
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        child: GNav(
+          gap: 8,
+          color: Colors.white,
+          activeColor: Colors.white,
+         
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          selectedIndex: myIndex,
+          onTabChange: (index) {
+            setState(() {
+              myIndex = index;
+            });
+          },
+          tabs: const [
+            GButton(
+              icon: Icons.home,
+              text: 'Home',
+              backgroundColor: Colors.orange,
+              
+            ),
+            GButton(
+              icon: Icons.music_note,
+              text: 'Music',
+              backgroundColor: Colors.red
+            ),
+            GButton(
+              icon: Icons.note,
+              text: 'Notes',
+              backgroundColor: Colors.green
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

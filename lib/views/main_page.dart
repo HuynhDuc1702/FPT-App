@@ -80,6 +80,7 @@ class _MainPageState extends State<MainPage> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Main Page'),
+         backgroundColor: Colors.blue,
           actions: [
             IconButton(
               icon: const Icon(Icons.logout),

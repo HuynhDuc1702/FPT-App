@@ -39,7 +39,7 @@ class _LoginViewState extends State<LoginView> {
           if (state is AuthStateLoggedIn) {
             Navigator.of(
               context,
-            ).pushNamedAndRemoveUntil('/main-page/', (_) => false);
+            ).pushNamedAndRemoveUntil('/home/', (_) => false);
           } else if (state is AuthStateEmailVerify) {
             Navigator.of(
               context,
