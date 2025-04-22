@@ -2,9 +2,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fptapp/blocs/auth_bloc/auth_bloc.dart';
+import 'package:fptapp/blocs/news/news_bloc.dart';
 import 'package:fptapp/blocs/notes/notes_bloc.dart';
 import 'package:fptapp/views/login_view.dart';
 import 'package:fptapp/views/main_page.dart';
+import 'package:fptapp/views/news_view.dart';
 import 'package:fptapp/views/register_view.dart';
 import 'package:fptapp/views/verify_email.dart';
 import 'firebase_options.dart';
@@ -21,6 +23,7 @@ void main() async {
         BlocProvider<AuthBlocRegister>(create: (context) => AuthBlocRegister()),
         BlocProvider<AuthBlocLogout>(create: (context) => AuthBlocLogout()),
         BlocProvider<NotesBloc>(create: (context) => NotesBloc()),
+        BlocProvider<NewsBloc>(create: (context) => NewsBloc()),
       ],
 
       child: const FPTMaterials(),
@@ -67,7 +70,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> pages = [
    
-    Center(child: Text('News Page')),
+    const NewsPage(),
     Center(child: Text('Music Page')),
      const MainPage(),
   ];
